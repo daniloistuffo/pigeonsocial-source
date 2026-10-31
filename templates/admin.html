@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Painel de Administração</h2>
+<p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Gestão de utilizadores, suspensões e apelos.</p>
+
+{% if all_users %}
+    {% for u in all_users %}
+        <div class="post" style="font-size: 13px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div><b>ID:</b> {{ u['id'] }} | <b>@{{ u['username'] }}</b></div>
+                <div><b>Status:</b> 
+                    {% if u['is_perm_banned'] %} <span style="color: var(--accent); font-weight: 700;">Banido Permanentemente</span>
+                    {% elif u['banned_until'] %} <span style="color: #f59e0b; font-weight: 700;">Banido temporariamente até {{ u['banned_until'] }}</span>
+                    {% else %} <span style="color: var(--success); font-weight: 700;">Ativo</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% if u['appeal_msg'] %}
+                <div style="margin-top: 8px; background: var(--container-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                    <b>Apelo:</b> {{ u['appeal_msg'] }}
+                </div>
+            {% endif %}
+            
+            <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+                <form method="POST" action="{{ url_for('main.admin_action', user_id=u['id'], action='ban_custom') }}" style="display: flex; gap: 4px; margin: 0;">
+                    <input type="hidden" name="days" value="1">
+                    <button type="submit" style="padding: 6px 10px; font-size: 11px; background: var(--border-color); color: var(--text-color); width: auto;">Ban 1D</button>
+                </form>
+                <form method="POST" action="{{ url_for('main.admin_action', user_id=u['id'], action='ban_custom') }}" style="display: flex; gap: 4px; margin: 0;">
+                    <input type="hidden" name="days" value="3">
+                    <button type="submit" style="padding: 6px 10px; font-size: 11px; background: var(--border-color); color: var(--text-color); width: auto;">Ban 3D</button>
+                </form>
+                <form method="POST" action="{{ url_for('main.admin_action', user_id=u['id'], action='ban_custom') }}" style="display: flex; gap: 4px; margin: 0;">
+                    <input type="hidden" name="days" value="7">
+                    <button type="submit" style="padding: 6px 10px; font-size: 11px; background: var(--border-color); color: var(--text-color); width: auto;">Ban 7D</button>
+                </form>
+                <form method="POST" action="{{ url_for('main.admin_action', user_id=u['id'], action='ban_custom') }}" style="display: flex; gap: 4px; margin: 0;">
+                    <input type="hidden" name="days" value="30">
+                    <button type="submit" style="padding: 6px 10px; font-size: 11px; background: var(--border-color); color: var(--text-color); width: auto;">Ban 30D</button>
+                </form>
+                <form method="POST" action="{{ url_for('main.admin_action', user_id=u['id'], action='unban_temp') }}" style="margin: 0;"><button type="submit" style="padding: 6px 10px; font-size: 11px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); width: auto;">Remover Temp</button></form>
+                <form method="POST" action="{{ url_for('main.admin_action', user_id=u['id'], action='ban_perm') }}" style="margin: 0;"><button type="submit" style="padding: 6px 10px; font-size: 11px; background: var(--accent); color: white; width: auto;">Ban Perm</button></form>
+                <form method="POST" action="{{ url_for('main.admin_action', user_id=u['id'], action='unban_perm') }}" style="margin: 0;"><button type="submit" style="padding: 6px 10px; font-size: 11px; background: var(--success); color: white; width: auto;">Remover Perm</button></form>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p style="color: var(--text-muted);">Nenhum utilizador encontrado.</p>
+{% endif %}
+<p style="text-align: center; margin-top: 20px;"><a href="{{ url_for('main.feed') }}" style="color: var(--text-muted); text-decoration: none; font-size: 14px;">Voltar ao Feed</a></p>
+{% endblock %}

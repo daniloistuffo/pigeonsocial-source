@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 400px; margin: 0 auto; padding: 10px;">
+    <h2 style="text-align: center; margin-bottom: 20px;">{{ t('login') }}</h2>
+
+    <form method="POST">
+        <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">{{ t('username') }}</label>
+        <input type="text" name="username" required autocomplete="off">
+
+        <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">{{ t('password') }}</label>
+        <input type="password" name="password" required>
+
+        <button type="submit" style="width: 100%; margin-top: 10px;">{{ t('login') }}</button>
+    </form>
+
+    <p style="text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-muted);">
+        {{ t('dont_have_account') }} <a href="{{ url_for('main.register') }}" style="color: var(--text-color); font-weight: 700; text-decoration: none;">{{ t('register') }}</a>
+    </p>
+</div>
+{% endblock %}
+        height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        #Repositionable {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .brand-logo-container {
+            text-align: center;
+            margin-bottom: 15px; /* Afasta a logo para cima, colocando-a no espaço circulado */
+            width: 100%;
+        }
+
+        .brand-logo {
+            width: 100%;
+            max-width: 320px; /* Tamanho perfeito para a logo na parte superior */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Container do Login: Maior, espaçoso e em cinza claro */
+        #LoginContainer {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 16px !important;
+            background-color: #F2F2F2 !important;
+            padding: 28px 24px !important;
+            border: 1px solid #CCCCCC !important;
+            border-radius: 5px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+            box-sizing: border-box !important;
+            color: #000000 !important;
+            width: 100%;
+        }
+
+        .login-column {
+            width: 100%;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .input-group label {
+            display: block !important;
+            font-weight: bold !important;
+            font-size: 12px !important;
+            color: #000000 !important;
+            margin-bottom: 5px !important;
+        }
+
+        input.text-box {
+            width: 100% !important;
+            height: 36px !important;
+            padding: 6px 10px !important;
+            border: 1px solid #A7A7A7 !important;
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+            box-sizing: border-box !important;
+            border-radius: 3px !important;
+            font-size: 14px !important;
+            display: block !important;
+        }
+
+        input.text-box:focus {
+            border-color: #EAB308 !important;
+            outline: none !important;
+        }
+
+        h2 {
+            color: #B45309 !important;
+            font-size: 16px !important;
+            margin: 0 0 8px 0 !important;
+            font-weight: bold !important;
+        }
+
+        p {
+            font-size: 12px !important;
+            margin: 0 0 12px 0 !important;
+            color: #333333 !important;
+        }
+
+        .login-btn {
+            background: linear-gradient(to bottom, #FACC15, #CA8A04) !important;
+            color: #000000 !important;
+            border: 1px solid #854D0E !important;
+            padding: 7px 20px !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            font-size: 13px !important;
+            border-radius: 2px !important;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(to bottom, #EAB308, #A16207) !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="BodyWrapper">
+        <div id="Repositionable">
+
+            <!-- Logo posicionado na zona superior (nuvens) -->
+            <div class="brand-logo-container">
+                <img src="{{ url_for('static', filename='images/cssspecific/rbx2/img-robloxlogo.png') }}" alt="DuckSOCIAL" class="brand-logo">
+            </div>
+
+            <!-- Container Principal de Login -->
+            <div id="LoginContainer">
+
+                <!-- Login de Utilizadores Existentes -->
+                <div class="login-column">
+                    <h2>Existing Users</h2>
+                    <form method="POST" action="{{ url_for('main.login') }}">
+                        <div class="input-group">
+                            <label>Username:</label>
+                            <input type="text" name="username" class="text-box" required autocomplete="off">
+                        </div>
+                        <div class="input-group">
+                            <label>Password:</label>
+                            <input type="password" name="password" class="text-box" required>
+                        </div>
+                        <div style="margin-top: 6px;">
+                            <button type="submit" class="login-btn">Login</button>
+                        </div>
+                    </form>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid #CCCCCC; margin: 4px 0;">
+
+                <!-- Registo de Novos Utilizadores -->
+                <div class="login-column">
+                    <h2>New to DuckSOCIAL?</h2>
+                    <p>Get your free account to post, chat, connect, and more!</p>
+                    <div>
+                        <a href="{{ url_for('main.register') }}">
+                            <img src="{{ url_for('static', filename='images/Buttons/getAFreeAccount.png') }}" alt="Create a Free Account" style="max-width: 170px; height: auto; display: block;">
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

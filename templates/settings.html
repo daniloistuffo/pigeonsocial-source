@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 style="text-align: center; margin-bottom: 20px;">{{ t('settings') }}</h2>
+
+<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius); margin-bottom: 20px;">
+    <form method="POST">
+        <label style="font-weight: 700; font-size: 13px; text-transform: uppercase; color: var(--text-muted);">{{ t('language') }}</label>
+        <select name="lang">
+            <option value="en" {% if session.get('lang') == 'en' %}selected{% endif %}>English</option>
+            <option value="pt" {% if session.get('lang') == 'pt' %}selected{% endif %}>Português</option>
+        </select>
+
+        <label style="font-weight: 700; font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-top: 12px; display: block;">{{ t('mode') }}</label>
+        <select name="theme">
+            <option value="dark" {% if session.get('theme') == 'dark' %}selected{% endif %}>Dark Mode</option>
+            <option value="light" {% if session.get('theme') == 'light' %}selected{% endif %}>Light Mode</option>
+        </select>
+
+        <label style="font-weight: 700; font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-top: 16px; display: block;">{{ t('account_privacy') }}</label>
+        <div style="margin: 8px 0 16px 0; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" name="is_private" id="is_private" value="1" {% if is_private %}checked{% endif %} style="width: auto; margin: 0;">
+            <label for="is_private" style="font-size: 14px; cursor: pointer; color: var(--text-color); margin: 0;">{{ t('private_account') }}</label>
+        </div>
+
+        <button type="submit" style="margin: 20px auto 0 auto; display: block; width: auto; min-width: 200px; padding: 12px 28px;">{{ t('save_preferences') }}</button>
+    </form>
+</div>
+
+<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius);">
+    <h3 style="text-align: center; margin-bottom: 16px;">{{ t('select_avatar') }}</h3>
+    <form method="POST" action="{{ url_for('main.update_avatar') }}">
+        <!-- Grelha restrita de 1 a 8 (excluindo Rainbow e Admin) -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 8px; justify-items: center; align-items: center; margin: 20px 0;">
+            {% for i in range(1, 9) %}
+                <label style="cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%;">
+                    <input type="radio" name="avatar_choice" value="ProfileImage#{{ i }}.png" {% if current_avatar == 'ProfileImage#' ~ i ~ '.png' %}checked{% endif %} style="display: none;">
+
+                    <img src="{{ url_for('static', filename='uploads/ProfileImage#' ~ i ~ '.png') }}"
+                         style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 3px solid {% if current_avatar == 'ProfileImage#' ~ i ~ '.png' %}var(--primary){% else %}var(--border-color);{% endif %};"
+                         onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=PigeonAvatar{{ i }}'">
+
+                    <div style="font-size: 11px; margin-top: 4px; color: var(--text-muted);">#{{ i }}</div>
+                </label>
+            {% endfor %}
+        </div>
+
+        <button type="submit" style="margin: 20px auto 0 auto; display: block; width: auto; min-width: 200px; padding: 12px 28px;">{{ t('save_avatar') }}</button>
+    </form>
+</div>
+
+<p style="text-align: center; margin-top: 24px;"><a href="{{ url_for('main.feed') }}" style="color: var(--text-muted); text-decoration: none; font-size: 14px;">{{ t('back_to_feed') }}</a></p>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 style="text-align: center; margin-bottom: 20px;">{{ t('feed') }}</h2>
+
+{% if active_tag %}
+    <div style="background: var(--card-bg); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color);">
+        <span>{{ t('filtering_tag') }} <b>#{{ active_tag }}</b></span>
+        <a href="{{ url_for('main.feed') }}" style="font-size: 13px; color: var(--text-muted);">{{ t('clear_filter') }}</a>
+    </div>
+{% endif %}
+
+{% if session.get('user_id') %}
+    <div style="margin-bottom: 24px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius);">
+        <form method="POST" action="{{ url_for('main.create_post') }}">
+            <textarea name="content" rows="3" placeholder="{{ t('thinking') }}" required></textarea>
+            <div style="margin: 12px 0; display: flex; align-items: center; justify-content: space-between;">
+                <label for="is_pigeon" style="font-size: 13px; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" name="is_pigeon" id="is_pigeon" value="1" style="width: auto; margin: 0;">
+                    {{ t('pigeon_mail') }}
+                </label>
+                <button type="submit" style="width: auto; padding: 8px 20px;">{{ t('publish') }}</button>
+            </div>
+        </form>
+    </div>
+{% else %}
+    <p style="text-align: center; background: var(--card-bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-muted);">
+        {{ t('login_prompt') }}
+    </p>
+{% endif %}
+
+<h3 style="text-align: center; margin-top: 28px; margin-bottom: 20px;">{{ t('recent_posts') }}</h3>
+
+{% if posts %}
+    {% for post in posts %}
+        <div class="post {% if post['is_pigeon'] %}post-pigeon{% endif %}">
+            <div class="post-header" style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+                {% if post['avatar'] %}
+                    <img src="{{ url_for('static', filename='uploads/' + post['avatar']) }}" class="avatar-small" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed={{ post['username'] }}'">
+                {% else %}
+                    <div class="avatar-small" style="display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text-muted);">USR</div>
+                {% endif %}
+                <div style="flex-grow: 1;">
+                    <a href="{{ url_for('main.profile', user_id=post['user_id']) }}" style="color: var(--text-color); font-weight: 700; text-decoration: none;">@{{ post['username'] }}</a>
+                    {% if post['is_pigeon'] %}
+                        <span class="badge">Pombo</span>
+                    {% endif %}
+                    <div class="post-time" style="font-size: 12px; color: var(--text-muted);">{{ post['timestamp'] }}</div>
+                </div>
+            </div>
+
+            {% if post['content'] %}
+                <div style="word-break: break-word; white-space: pre-wrap; margin: 12px 0; line-height: 1.5;">{{ post['content'] | format_hashtags | safe }}</div>
+            {% endif %}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color); font-size: 13px;">
+                <div style="display: flex; gap: 16px;">
+                    <a href="{{ url_for('main.like_post', post_id=post['id']) }}" style="text-decoration: none; color: {% if post['has_liked'] %}var(--text-color){% else %}var(--text-muted){% endif %}; font-weight: 600;">
+                        {{ t('likes') }} [ {{ post['likes_count'] }} ]
+                    </a>
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('main.toggle_save_post', post_id=post['id']) }}" style="text-decoration: none; color: var(--text-muted); font-weight: 600;">
+                            🔖 {{ t('save_post') }}
+                        </a>
+                    {% endif %}
+                </div>
+                {% if session.get('user_id') and session.get('user_id') != post['user_id'] %}
+                    <div>
+                        <a href="{{ url_for('main.chat', user_id=post['user_id']) }}" style="color: var(--text-muted); text-decoration: none; font-weight: 600;">{{ t('direct_message') }}</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div style="margin-top: 12px; background: var(--container-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div style="font-weight: 700; font-size: 12px; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase;">{{ t('comments') }}</div>
+                {% if post['comments'] %}
+                    {% for c in post['comments'] %}
+                        <div style="font-size: 13px; margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">
+                            <a href="{{ url_for('main.profile', user_id=c['user_id']) }}" style="font-weight: 700; color: var(--text-color); text-decoration: none;">@{{ c['username'] }}</a>:
+                            <span style="color: var(--text-muted);">{{ c['content'] }}</span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">{{ t('no_comments') }}</div>
+                {% endif %}
+
+                {% if session.get('user_id') %}
+                    <form method="POST" action="{{ url_for('main.add_comment', post_id=post['id']) }}" style="display: flex; gap: 8px; margin-top: 8px;">
+                        <input type="text" name="content" placeholder="{{ t('comment_placeholder') }}" required style="margin: 0; padding: 8px 12px; font-size: 13px;">
+                        <button type="submit" style="width: auto; padding: 8px 16px; font-size: 13px;">{{ t('send') }}</button>
+                    </form>
+                {% endif %}
+            </div>
+
+        </div>
+    {% endfor %}
+{% else %}
+    <p style="color: var(--text-muted); text-align: center;">{{ t('no_posts') }}</p>
+{% endif %}
+{% endblock %}

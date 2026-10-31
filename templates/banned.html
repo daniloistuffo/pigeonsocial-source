@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="text-align: center; padding: 20px 0;">
+    <h2 style="color: var(--danger);">{{ t('banned_title') }}</h2>
+    {% if user['is_perm_banned'] %}
+        <p style="color: var(--text-muted);">{{ t('banned_perm') }}</p>
+    {% else %}
+        <p style="color: var(--text-muted);">{{ t('banned_temp') }} <b>{{ user['banned_until'] }}</b></p>
+    {% endif %}
+
+    <div style="margin-top: 24px; text-align: left; background: var(--card-bg); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border-color);">
+        <form method="POST" action="{{ url_for('main.submit_appeal') }}">
+            <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px; text-transform: uppercase; color: var(--text-muted);">{{ t('appeal_label') }}</label>
+            <textarea name="appeal_text" rows="3" placeholder="Escreva o seu apelo aqui..." required>{{ user['appeal_msg'] or '' }}</textarea>
+            <button type="submit" style="margin-top: 8px;">{{ t('appeal_btn') }}</button>
+        </form>
+    </div>
+    <br>
+    <a href="{{ url_for('main.logout') }}" style="color: var(--danger); font-weight: 700; text-decoration: none; font-size: 14px;">{{ t('logout') }}</a>
+</div>
+{% endblock %}

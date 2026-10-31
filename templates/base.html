@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('lang', 'en') }}" data-theme="{{ session.get('theme', 'dark') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PigeonSOCIAL</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --container-bg: #111827;
+            --card-bg: #1f293d;
+            --card-hover: #253348;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --accent: #f43f5e;
+            --success: #22c55e;
+            --radius: 18px;
+            --radius-sm: 10px;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --container-bg: #ffffff;
+            --card-bg: #f1f5f9;
+            --card-hover: #e2e8f0;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --accent: #e11d48;
+            --success: #16a34a;
+        }
+
+        * { box-sizing: border-box; transition: var(--transition); }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; padding: 12px 6px;
+            display: flex; justify-content: center; min-height: 100vh;
+        }
+
+        .container {
+            width: 100%; max-width: 680px;
+            background: var(--container-bg); padding: 20px 14px;
+            border-radius: var(--radius); box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .brand-logo-container { text-align: center; margin-bottom: 20px; }
+
+        h2, h3 { color: var(--text-color); margin-top: 0; font-weight: 800; }
+
+        input, textarea, select {
+            width: 100%; padding: 12px 16px; margin: 8px 0 16px 0;
+            border: 1px solid var(--border-color); background: var(--card-bg);
+            color: var(--text-color); border-radius: var(--radius-sm); font-size: 16px; outline: none;
+        }
+
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); }
+
+        button, .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: #ffffff; padding: 10px 20px; border: none; border-radius: 9999px;
+            cursor: pointer; font-size: 14px; font-weight: 700; display: inline-flex;
+            align-items: center; justify-content: center; text-decoration: none;
+        }
+
+        button:hover, .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        .nav {
+            margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);
+            display: flex; flex-direction: column; gap: 16px; align-items: center; font-size: 13px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .nav a:hover { background: var(--card-bg); color: var(--primary); }
+
+        .post { background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; margin-bottom: 18px; border-radius: var(--radius); }
+        .avatar-small { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .avatar-large { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 14px; }
+
+        .flash { background: rgba(244, 63, 94, 0.15); border: 1px solid var(--accent); color: var(--text-color); padding: 14px; border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 14px; }
+
+        @media (max-width: 480px) {
+            body { padding: 4px 2px; }
+            .container { padding: 14px 10px; border-radius: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand-logo-container">
+            <h1 style="font-size: 1.8rem; margin: 0;">
+                <a href="{{ url_for('main.feed') }}" style="color: var(--text-color); text-decoration: none;">PigeonSOCIAL</a>
+            </h1>
+        </div>
+
+        <div class="nav">
+            <div class="nav-links">
+                <a href="{{ url_for('main.feed') }}">{{ t('feed') }}</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('main.profile', user_id=session.get('user_id')) }}">{{ t('profile') }}</a>
+                    <a href="{{ url_for('main.settings') }}">{{ t('settings') }}</a>
+                    <a href="{{ url_for('main.logout') }}" style="color: var(--accent);">{{ t('logout') }}</a>
+                {% else %}
+                    <a href="{{ url_for('main.login') }}">{{ t('login') }}</a>
+                    <a href="{{ url_for('main.register') }}">{{ t('register') }}</a>
+                {% endif %}
+            </div>
+
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <form action="{{ url_for('main.feed') }}" method="GET" style="display: flex; gap: 8px; width: 100%; max-width: 480px; margin: 0;">
+                    <input type="text" name="tag" placeholder="{{ t('search_placeholder') }}" value="{{ active_tag or '' }}" style="margin: 0; flex-grow: 1; padding: 10px 14px; font-size: 13px;" autocomplete="off">
+                    <button type="submit" style="margin: 0; width: auto; padding: 0 20px; font-size: 13px;">{{ t('search') }}</button>
+                </form>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

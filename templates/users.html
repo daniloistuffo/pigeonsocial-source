@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ t('users') }}</h2>
+
+<form method="GET" action="{{ url_for('main.users_list') }}" style="display: flex; gap: 8px; margin-bottom: 20px;">
+    <input type="text" name="q" value="{{ search_query }}" placeholder="{{ t('search_placeholder') }}" style="margin: 0;">
+    <button type="submit" style="width: auto; padding: 0 20px;">{{ t('search') }}</button>
+</form>
+
+{% if users %}
+    {% for u in users %}
+        <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 14px; margin-bottom: 12px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center; transition: var(--transition);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                {% if u['avatar'] %}
+                    {% if u['avatar'].startswith('http') %}
+                        <img src="{{ u['avatar'] }}" class="avatar-small">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='uploads/' + u['avatar']) }}" class="avatar-small">
+                    {% endif %}
+                {% else %}
+                    <div class="avatar-small" style="display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-muted); font-weight: bold;">USR</div>
+                {% endif %}
+                <div>
+                    <div style="font-weight: 700; color: var(--text-color);">@{{ u['username'] }} <span style="color: var(--text-muted); font-weight: 400; font-size: 12px;">(#{{ u['id'] }})</span></div>
+                    {% if u['bio'] %}
+                        <div style="font-size: 12px; color: var(--text-muted); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ u['bio'] }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <a href="{{ url_for('main.profile', user_id=u['id']) }}" class="btn" style="width: auto; padding: 6px 12px; font-size: 12px; background: transparent; border: 1px solid var(--border-color); color: var(--text-color);">{{ t('profile') }}</a>
+                <a href="{{ url_for('main.chat', user_id=u['id']) }}" class="btn" style="width: auto; padding: 6px 12px; font-size: 12px;">Chat</a>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p style="color: var(--text-muted); text-align: center;">{{ t('no_users') }}</p>
+{% endif %}
+{% endblock %}

@@ -1,48 +1,87 @@
-# 🐦 PigeonSOCIAL
+# PigeonSOCIAL
 
-<div align="center">
+PigeonSOCIAL is a lightweight, modern, open-source social networking platform designed to connect people through a clean, responsive, and minimalist web interface.
 
-A minimalist, modern social networking platform designed to connect people quickly, simply, and interactively.
+## About the Project
 
-[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-Framework-green.svg)](https://flask.palletsprojects.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+PigeonSOCIAL is a full-stack social network built with Python, Flask, and SQLite. It aims to provide a fast, secure, and straightforward platform for online communities. The application includes interactive post feeds, private messaging, hashtag indexing, daily activity streak tracking, and built-in administrative moderation tools.
 
-</div>
+## Key Features
 
----
+- Public Feed: Create posts, interact with comments, and use clickable hashtags.
+- Special Post Types: Support for custom post classifications such as Pigeon Mail.
+- Direct Messaging: One-on-one private chat system between registered users.
+- User Profiles: Customizable bios, avatar selection, saved posts bookmarks, and posting streak counters.
+- Hashtag Filtering: Easily discover and search posts by specific topic tags.
+- Administrative Panel: Comprehensive moderation dashboard for reviewing user appeals and applying temporary or permanent account suspensions.
+- Multilingual Support: Built-in internationalization supporting English and Portuguese.
+- Account Privacy Settings: Options for users to control profile visibility and application settings.
 
-## 🚀 About the Project
+## Technology Stack
 
-**PigeonSOCIAL** is a full-stack social network focused on delivering a clean, classic community experience powered by lightweight modern web technologies. It comes equipped with interactive feed features, private messaging, user streak tracking, and built-in moderation workflows.
+- Backend: Python 3, Flask, Werkzeug Security
+- Database: SQLite with Write-Ahead Logging (WAL) enabled for optimized concurrency
+- Frontend: HTML5, CSS3 with native CSS variables for responsive styling
+- Deployment Compatibility: Runs on local environments, cloud hosting services (such as PythonAnywhere), and mobile terminal setups (such as Termux)
 
----
+## System Requirements
 
-## ✨ Features
+- Python 3.8 or higher
+- pip (Python package installer)
 
-* 📝 **Interactive Feed:** Share posts with clickable `#hashtags` and send special "Pigeon Mail" messages.
-* 💬 **Direct Messaging:** Real-time private chat system between registered users.
-* 👤 **Custom Profiles:** Bio updates, selectable avatars, daily posting streaks, and saved posts bookmarks.
-* 🔍 **Hashtag Search:** Quickly filter public posts by specific tags.
-* 🛡️ **Admin Panel:** Complete moderation tools to handle user appeals, temporary bans, or permanent suspensions.
-* 🌐 **Internationalization:** Seamless language toggle supporting English and Portuguese.
+## Installation and Setup
 
----
-
-## 🛠️ Tech Stack
-
-* **Backend:** Python, Flask, Werkzeug Security
-* **Database:** SQLite (configured with WAL mode for fast concurrency)
-* **Frontend:** HTML5, CSS3 with dynamic theme variable styling
-* **Deployment:** Compatible with local execution, cloud hosts (like PythonAnywhere), and mobile terminal environments (Termux)
-
----
-
-## ⚙️ Getting Started
-
-Follow these steps to set up and run the project locally:
-
-1. **Clone the repository:**
+1. Clone the repository:
    ```bash
-   git clone [https://github.com/your-username/PigeonFILES.git](https://github.com/your-username/PigeonFILES.git)
-   cd PigeonFILES
+   git clone https://github.com/your-username/PigeonSOCIAL.git
+   cd PigeonSOCIAL
+   ```
+
+2. Install the required dependencies:
+   ```bash
+   pip install flask werkzeug markupsafe
+   ```
+
+3. Initialize the database and run the application:
+   ```bash
+   python app.py
+   ```
+
+4. Open your web browser and navigate to:
+   ```
+   http://127.0.0.1:5000
+   ```
+
+## Project Structure
+
+```
+PigeonSOCIAL/
+├── app.py              # Main application entry point
+├── database.py         # Database initialization and connection helpers
+├── routes.py           # Blueprint routes and core application logic
+├── templates/          # HTML templates
+│   ├── base.html       # Base layout template
+│   ├── feed.html       # Public feed view
+│   ├── profile.html    # User profile view
+│   ├── chat.html       # Direct messaging view
+│   ├── admin.html      # Administration panel
+│   ├── login.html      # User authentication login
+│   ├── register.html   # Account registration
+│   ├── settings.html   # User settings and preferences
+│   └── banned.html     # Account suspension screen
+└── static/             # Static assets (CSS, JS, images)
+```
+
+## Contributing
+
+Contributions are welcome. Please follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch for your feature (`git checkout -b feature/NewFeature`).
+3. Commit your changes (`git commit -m 'Add NewFeature'`).
+4. Push to the branch (`git push origin feature/NewFeature`).
+5. Open a Pull Request explaining your changes.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
